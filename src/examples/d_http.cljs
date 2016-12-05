@@ -29,12 +29,12 @@
                     :uri             (str "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" topic)
                     :timeout         8000                                           ;; optional see API docs
                     :response-format (ajax/json-response-format {:keywords? true})  ;; IMPORTANT!: You must provide this.
-                    :on-success      [:response-more-please-success]
-                    :on-failure      [:response-more-please-failure]}}))
+                    :on-success      [:new-gif-ok]
+                    :on-failure      [:new-gif-err]}}))
 
 
 (re-frame/reg-event-db
- :response-more-please-success
+ :new-gif-ok
   (fn
     [db [_ response]]           ;; destructure the response from the event vector
     (-> db
@@ -44,7 +44,7 @@
 
 
 (re-frame/reg-event-db
- :response-more-please-failure
+ :new-gif-err
   (fn
     [db [_ response]]           ;; destructure the response from the event vector
     (-> db
@@ -87,4 +87,5 @@
   (re-frame/dispatch-sync [:initialize-db])
   (enable-console-print!)
   (enable-re-frisk!)
+  (re-frame/dispatch [:more-please "cats"])
   (mount-root))
